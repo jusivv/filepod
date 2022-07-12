@@ -1,0 +1,7 @@
+aliOss:
+  endpoint: "oss-cn-beijing.aliyuncs.com"
+  accessKeyId: ""
+  accessKeySecret: ""
+  bucketName: ""
+
+serverKey: "MDEyMzQ1Njc4OUFCQ0RFRg=="
