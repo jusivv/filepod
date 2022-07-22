@@ -11,6 +11,10 @@ public class FilepodMetaInf extends FileMetaInf {
      * Encryption method, null or empty if the file stored without encryption
      */
     private String cipherModel;
+    /**
+     * file identify
+     */
+    private String fileId;
 
     public String getContentType() {
         return contentType;
@@ -26,5 +30,13 @@ public class FilepodMetaInf extends FileMetaInf {
 
     public void setCipherModel(String cipherModel) {
         this.cipherModel = cipherModel;
+    }
+
+    public String getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(String fileId) {
+        this.fileId = fileId;
     }
 }

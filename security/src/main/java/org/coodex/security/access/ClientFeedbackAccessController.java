@@ -72,17 +72,17 @@ public abstract class ClientFeedbackAccessController extends ScopeAccessControll
     }
 
     @Override
-    public boolean canWrite(String clientId, String token) {
+    public boolean writable(String clientId, String token) {
         return getFeedback(getHost(clientId), "/writable", token, null);
     }
 
     @Override
-    public boolean canRead(String clientId, String token, String fileId) {
+    public boolean readable(String clientId, String token, String fileId) {
         return getFeedback(getHost(clientId), "/readable", token, fileId);
     }
 
     @Override
-    public boolean canDelete(String clientId, String token, String fileId) {
+    public boolean deletable(String clientId, String token, String fileId) {
         return getFeedback(getHost(clientId),"/deletable", token, fileId);
     }
 

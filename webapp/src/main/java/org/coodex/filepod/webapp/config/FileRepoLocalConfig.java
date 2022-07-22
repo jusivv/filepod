@@ -1,11 +1,10 @@
 package org.coodex.filepod.webapp.config;
 
+import org.coodex.filepod.config.FileRepoConfig;
 import org.coodex.filerepository.local.LocalRepositoryPath;
 
-public class FileRepoLocalConfig {
+public class FileRepoLocalConfig extends FileRepoConfig {
     private LocalRepositoryPath[] paths;
-    private String defaultCipher;
-    private String serverKey;
 
     public LocalRepositoryPath[] getPaths() {
         return paths;
@@ -15,19 +14,8 @@ public class FileRepoLocalConfig {
         this.paths = paths;
     }
 
-    public String getDefaultCipher() {
-        return defaultCipher;
-    }
-
-    public void setDefaultCipher(String defaultCipher) {
-        this.defaultCipher = defaultCipher;
-    }
-
-    public String getServerKey() {
-        return serverKey;
-    }
-
-    public void setServerKey(String serverKey) {
-        this.serverKey = serverKey;
+    @Override
+    public boolean accept(String tag) {
+        return "local".equalsIgnoreCase(tag);
     }
 }

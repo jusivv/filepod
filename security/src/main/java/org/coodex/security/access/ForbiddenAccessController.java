@@ -6,17 +6,17 @@ package org.coodex.security.access;
 public class ForbiddenAccessController extends ScopeAccessController {
 
     @Override
-    public boolean canWrite(String clientId, String token) {
+    public boolean writable(String clientId, String token) {
         return false;
     }
 
     @Override
-    public boolean canRead(String clientId, String token, String fileId) {
+    public boolean readable(String clientId, String token, String fileId) {
         return false;
     }
 
     @Override
-    public boolean canDelete(String clientId, String token, String fileId) {
+    public boolean deletable(String clientId, String token, String fileId) {
         return false;
     }
 

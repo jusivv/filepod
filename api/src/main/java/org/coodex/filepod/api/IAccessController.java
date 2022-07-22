@@ -18,7 +18,7 @@ public interface IAccessController extends IProviderSelector {
      * @param token     client token
      * @return          allow writing or not
      */
-    boolean canWrite(String clientId, String token);
+    boolean writable(String clientId, String token);
 
     /**
      * whether the client can read
@@ -27,7 +27,7 @@ public interface IAccessController extends IProviderSelector {
      * @param fileId    file identifier
      * @return          allow reading or not
      */
-    boolean canRead(String clientId, String token, String fileId);
+    boolean readable(String clientId, String token, String fileId);
 
     /**
      * whether the client can access the file that belong to a specified owner
@@ -44,7 +44,7 @@ public interface IAccessController extends IProviderSelector {
      * @param fileId    file identifier
      * @return          allow deleting or not
      */
-    boolean canDelete(String clientId, String token, String fileId);
+    boolean deletable(String clientId, String token, String fileId);
 
     /**
      * notify client when finish uploading

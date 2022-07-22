@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;
+import java.util.function.Consumer;
 
 public class ServiceHelper {
     private static Logger log = LoggerFactory.getLogger(ServiceHelper.class);
@@ -19,21 +20,20 @@ public class ServiceHelper {
                 return provider;
             }
         }
-        log.warn("no provider accept tag: {} for class: {}", tag, clazz.getName());
-        return null;
+        log.error("no provider accept tag: {} for class: {}", tag, clazz.getName());
+        throw new RuntimeException("no provider accept tag: " + tag + " for class: " + clazz.getName());
     }
 
     public static <T extends IProviderSelector> void iterateProvider(String tag, Class<T> clazz,
-                                                                     IServiceIterator<T> serviceIterator) {
+                                                                     Consumer<T> consumer) {
         ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz);
         for (Iterator<T> it = serviceLoader.iterator(); it.hasNext(); ) {
             T provider = it.next();
             if (provider.accept(tag)) {
                 log.debug("hit provider: {} for class: {}", provider.getClass().getName(), clazz.getName());
-                serviceIterator.iterate(provider);
+                consumer.accept(provider);
             }
         }
-        log.warn("no provider accept tag: {} for class: {}", tag, clazz.getName());
     }
 
 }

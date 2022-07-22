@@ -8,6 +8,5 @@ paths:
   - location: "/Users/sujiwu/Downloads/fileRepo/save3/"
     readable: true
     writable: true
-
 defaultCipher: "aes.v2"
-serverKey: "MDEyMzQ1Njc4OUFCQ0RFRg=="
+serverKey: ${LOCAL_SERVER_KEY:MDEyMzQ1Njc4OUFCQ0RFRg==}

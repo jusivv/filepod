@@ -1,0 +1,24 @@
+testTotp:
+  scope: "*"
+  accessController: "totp"
+  totpSecret: "3ILBOB2T2AVWSLGSEWQGN2AEQQ======"
+#  otpauth://totp/Filepod:testTotp?secret=3ILBOB2T2AVWSLGSEWQGN2AEQQ&issuer=Filepod&algorithm=SHA1&digits=6&period=30
+  fileRepository: "local"
+
+testConcrete:
+  scope: "*"
+  accessController: "concrete"
+  clientUrl: "http://127.0.0.1:8090/Client"
+  fileRepository: "local"
+
+testConcreteV04x:
+  scope: "*"
+  accessController: "concrete_v0.4.x"
+  clientUrl: "http://127.0.0.1:8090/Client"
+  fileRepository: "local"
+
+testFeedback:
+  scope: "*"
+  accessController: "session"
+  clientUrl: "http://127.0.0.1:8090/Client"
+  fileRepository: "local"

@@ -3,5 +3,5 @@ aliOss:
   accessKeyId: ""
   accessKeySecret: ""
   bucketName: ""
-
+defaultCipher: "aes.v2"
 serverKey: "MDEyMzQ1Njc4OUFCQ0RFRg=="

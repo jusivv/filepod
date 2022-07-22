@@ -26,17 +26,17 @@ public class TotpBasedAccessController extends ScopeAccessController {
     }
 
     @Override
-    public boolean canWrite(String clientId, String token) {
+    public boolean writable(String clientId, String token) {
         return authenticate(clientId, token);
     }
 
     @Override
-    public boolean canRead(String clientId, String token, String fileId) {
+    public boolean readable(String clientId, String token, String fileId) {
         return authenticate(clientId, token);
     }
 
     @Override
-    public boolean canDelete(String clientId, String token, String fileId) {
+    public boolean deletable(String clientId, String token, String fileId) {
         return authenticate(clientId, token);
     }
 

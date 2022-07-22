@@ -1,0 +1,24 @@
+allowedOrigins:
+  - "*"
+  - "localhost:9528"
+allowedHeaders:
+  - "Content-Type"
+  - "Content-Length"
+  - "Host"
+  - "User-Agent"
+  - "Cache-Control"
+  - "Accept"
+  - "Accept-Encoding"
+  - "Connection"
+exposedHeaders:
+  - "CONCRETE-TOKEN-ID"
+allowedMethods:
+  - "GET"
+  - "POST"
+  - "OPTIONS"
+  - "PUT"
+  - "DELETE"
+  - "TRACE"
+allowCredentials: true
+maxAge: 3600
+debug: false
