@@ -1,5 +1,9 @@
 package org.coodex.security.access;
 
+/**
+ * Only for test
+ */
+@Deprecated
 public class AllowableAccessController extends ScopeAccessController {
 
     @Override
