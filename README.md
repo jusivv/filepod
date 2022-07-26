@@ -90,3 +90,13 @@ or
 ```
 
 - Response status 200 means allowed
+
+## Dockerize
+
+```shell
+# build
+docker build -t filepod:1.0.0 .
+# run & stop
+docker-compose up -d
+docker-compose down
+```
