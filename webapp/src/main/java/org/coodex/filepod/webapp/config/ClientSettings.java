@@ -5,11 +5,14 @@ import org.apache.commons.configuration2.builder.ReloadingFileBasedConfiguration
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.reloading.PeriodicReloadingTrigger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 public class ClientSettings {
+    private static Logger log = LoggerFactory.getLogger(ClientSettings.class);
     private static YAMLConfiguration configuration;
 
     public static void load(String fileName) throws ConfigurationException {
@@ -22,6 +25,7 @@ public class ClientSettings {
                 null, 1, TimeUnit.MINUTES);
         trigger.start();
         configuration = builder.getConfiguration();
+        log.debug("load client settings from {}", fileName);
     }
 
     public static <T> T get(String key, Class<T> valueClass, T defaultValue) {
