@@ -1,0 +1,10 @@
+version: '2.0'
+services:
+  filepod:
+    image: 'filepod:1.0.0'
+    container_name: 'filepod'
+    ports:
+      - '8080:8080'
+    environment:
+      CONFIGURATION_PATH: '/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/config'
+      LOGBACK_CONFIG_FILE: 'logback.xml'

@@ -16,15 +16,15 @@
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
         </dependency>
+        <!--    exclude in production mode    -->
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>filepod-webapp</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>filepod-security</artifactId>
-            <version>${project.parent.version}</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
         </dependency>
     </dependencies>
 
