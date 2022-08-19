@@ -1,7 +1,8 @@
+ARG FILE_REPOSITORY_VERSION=2.0.3
 # dependency
 FROM bitnami/git:2.37.1 as dep
 WORKDIR /
-RUN git clone --depth 1 --branch 2.0.3 https://github.com/jusivv/file-repository
+RUN git clone --depth 1 --branch $FILE_REPOSITORY_VERSION https://github.com/jusivv/file-repository
 
 # build stage
 FROM maven:3.8.4-openjdk-11 AS build
