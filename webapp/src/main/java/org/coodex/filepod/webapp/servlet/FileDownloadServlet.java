@@ -5,16 +5,12 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.coodex.filepod.api.IAccessController;
 import org.coodex.filepod.api.ICryptoStreamWrapper;
-import org.coodex.filepod.config.FileRepoConfig;
 import org.coodex.filepod.pojo.FilepodMetaInf;
 import org.coodex.filepod.webapp.config.ClientSettings;
-import org.coodex.filepod.webapp.config.FileRepoConfigManager;
 import org.coodex.filepod.webapp.repo.FileRepoManager;
 import org.coodex.filepod.webapp.util.*;
 import org.coodex.filerepository.api.IFileRepository;
 import org.coodex.util.Common;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
@@ -37,8 +33,6 @@ import java.util.regex.Pattern;
 
 @WebServlet(urlPatterns = {"/attachments/download/*"}, asyncSupported = true)
 public class FileDownloadServlet extends HttpServlet {
-    private static Logger log = LoggerFactory.getLogger(FileDownloadServlet.class);
-
     private Executor executor = Executors.newCachedThreadPool();
 
     private Base64 base64 = new Base64();
@@ -65,8 +59,6 @@ public class FileDownloadServlet extends HttpServlet {
                     return new RuntimeException("no file repository for " + repo);
                 });
                 // get repo config
-                FileRepoConfig fileRepoConfig = ServiceHelper.getProvider(repo, FileRepoConfig.class);
-                FileRepoConfigManager.get(repo, fileRepoConfig);
                 String[] fileIds = context.getFileId().split(",");
                 List<FilepodMetaInf> metaInfs = new ArrayList<>();
                 for (String fileId : fileIds) {
@@ -112,7 +104,10 @@ public class FileDownloadServlet extends HttpServlet {
                             if (!Common.isBlank(metaInf.getCipherModel())) {
                                 ICryptoStreamWrapper streamWrapper = ServiceHelper.getProvider(metaInf.getCipherModel(),
                                         ICryptoStreamWrapper.class);
-                                streamWrapper.init(base64.decode(fileRepoConfig.getServerKey()), metaInf);
+                                String serverKey = ClientSettings.getString(
+                                        context.getClientId() + ".serverKey", null);
+                                streamWrapper.init(
+                                        serverKey != null ? base64.decode(serverKey) : new byte[0], metaInf);
                                 os = streamWrapper.getOutput(os);
                             }
                             fileRepository.get(metaInf.getFileId(), os);
@@ -160,7 +155,10 @@ public class FileDownloadServlet extends HttpServlet {
                         if (!Common.isBlank(metaInf.getCipherModel())) {
                             ICryptoStreamWrapper streamWrapper = ServiceHelper.getProvider(metaInf.getCipherModel(),
                                     ICryptoStreamWrapper.class);
-                            streamWrapper.init(base64.decode(fileRepoConfig.getServerKey()), metaInf);
+                            String serverKey = ClientSettings.getString(
+                                    context.getClientId() + ".serverKey", null);
+                            streamWrapper.init(
+                                    serverKey != null ? base64.decode(serverKey) : new byte[0], metaInf);
                             os = streamWrapper.getOutput(os);
                         }
                         fileRepository.get(metaInf.getFileId(), offset, (int)length, os);

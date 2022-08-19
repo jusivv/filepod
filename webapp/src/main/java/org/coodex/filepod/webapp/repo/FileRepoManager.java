@@ -7,13 +7,14 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class FileRepoManager {
     private static Logger log = LoggerFactory.getLogger(FileRepoManager.class);
     private static String defaultKey;
     private static final Map<String, IFileRepository> fileRepos = new HashMap<>();
 
-    public static void register(String name, FileRepoSupplier supplier, boolean isDefault) {
+    public static void register(String name, Supplier<IFileRepository> supplier, boolean isDefault) {
         fileRepos.put(name, supplier.get());
         if (isDefault) {
             defaultKey = name;
@@ -21,11 +22,11 @@ public class FileRepoManager {
         log.info("register file repository [{}]{}", name, isDefault ? " as default." : ".");
     }
 
-    public static void register(String name, FileRepoSupplier supplier) {
+    public static void register(String name, Supplier<IFileRepository> supplier) {
         register(name, supplier, false);
     }
 
-    public static void registerAsDefault(String name, FileRepoSupplier supplier) {
+    public static void registerAsDefault(String name, Supplier<IFileRepository> supplier) {
         register(name, supplier, true);
     }
 
@@ -40,5 +41,14 @@ public class FileRepoManager {
 
     public static Optional<IFileRepository> getRepo() {
         return getRepo(defaultKey);
+    }
+
+    public static boolean setDefault(String repoName) {
+        if (fileRepos.containsKey(repoName)) {
+            defaultKey = repoName;
+            return true;
+        } else {
+            return false;
+        }
     }
 }
