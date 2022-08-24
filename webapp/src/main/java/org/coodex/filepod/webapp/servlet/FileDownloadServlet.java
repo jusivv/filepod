@@ -3,6 +3,7 @@ package org.coodex.filepod.webapp.servlet;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.lang3.StringUtils;
 import org.coodex.filepod.api.IAccessController;
 import org.coodex.filepod.api.ICryptoStreamWrapper;
 import org.coodex.filepod.pojo.FilepodMetaInf;
@@ -10,7 +11,6 @@ import org.coodex.filepod.webapp.config.ClientSettings;
 import org.coodex.filepod.webapp.repo.FileRepoManager;
 import org.coodex.filepod.webapp.util.*;
 import org.coodex.filerepository.api.IFileRepository;
-import org.coodex.util.Common;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
@@ -79,7 +79,8 @@ public class FileDownloadServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_OK);
                 // accept range
                 String range = request.getHeader("RANGE");
-                boolean supportRange = !Common.isBlank(range);
+
+                boolean supportRange = !StringUtils.isEmpty(range);
                 if (metaInfs.size() > 1) {
                     if (supportRange) {
                         throw new FilepodServletException(HttpServletResponse.SC_BAD_REQUEST,
@@ -101,7 +102,7 @@ public class FileDownloadServlet extends HttpServlet {
                             zipArchiveOutputStream.putArchiveEntry(zipArchiveEntry);
                             // crypto
                             OutputStream os = zipArchiveOutputStream;
-                            if (!Common.isBlank(metaInf.getCipherModel())) {
+                            if (!StringUtils.isEmpty(metaInf.getCipherModel())) {
                                 ICryptoStreamWrapper streamWrapper = ServiceHelper.getProvider(metaInf.getCipherModel(),
                                         ICryptoStreamWrapper.class);
                                 String serverKey = ClientSettings.getString(
@@ -152,7 +153,7 @@ public class FileDownloadServlet extends HttpServlet {
                         }
                         // crypto
                         OutputStream os = outputStream;
-                        if (!Common.isBlank(metaInf.getCipherModel())) {
+                        if (!StringUtils.isEmpty(metaInf.getCipherModel())) {
                             ICryptoStreamWrapper streamWrapper = ServiceHelper.getProvider(metaInf.getCipherModel(),
                                     ICryptoStreamWrapper.class);
                             String serverKey = ClientSettings.getString(
