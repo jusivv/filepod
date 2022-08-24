@@ -4,6 +4,8 @@ testTotp:
   totpSecret: "3ILBOB2T2AVWSLGSEWQGN2AEQQ======"
 #  otpauth://totp/Filepod:testTotp?secret=3ILBOB2T2AVWSLGSEWQGN2AEQQ&issuer=Filepod&algorithm=SHA1&digits=6&period=30
   fileRepository: "local"
+  defaultCipher: "aes.v2"
+  serverKey: ${LOCAL_SERVER_KEY:MDEyMzQ1Njc4OUFCQ0RFRg==}
 
 testConcrete:
   scope: "*"

@@ -1,22 +1,22 @@
 package org.coodex.filepod.webapp.servlet;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.coodex.filepod.api.IFileRepositorySupplier;
 import org.coodex.filepod.webapp.config.ClientSettings;
 import org.coodex.filepod.webapp.config.EnvSettingsGetter;
-import org.coodex.filepod.webapp.config.FileRepoConfigManager;
-import org.coodex.filepod.webapp.config.FileRepoLocalConfig;
 import org.coodex.filepod.webapp.repo.FileRepoManager;
-import org.coodex.filerepository.local.HashPathGenerator;
-import org.coodex.filerepository.local.LocalFileRepository;
-import org.coodex.filerepository.local.LocalRepositoryPath;
+import org.coodex.filepod.webapp.util.ServiceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @WebServlet(urlPatterns = {"/load/file/repository"}, loadOnStartup = 1)
 public class FileRepoLoader extends HttpServlet {
@@ -24,15 +24,18 @@ public class FileRepoLoader extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        final String fileRepoName = "local";
-        FileRepoManager.registerAsDefault(fileRepoName, () -> {
-            try {
-                FileRepoLocalConfig localConfig = FileRepoConfigManager.load(EnvSettingsGetter.configurationPath(),
-                        fileRepoName, FileRepoLocalConfig.class);
-                return new LocalFileRepository(buildBasePath(localConfig), new HashPathGenerator());
-            } catch (FileNotFoundException e) {
-                log.error(e.getLocalizedMessage(), e);
-                throw new RuntimeException(e);
+        final Yaml yaml = new Yaml();
+        ServiceHelper.iterateProvider(IFileRepositorySupplier.class, repoSupplier -> {
+            String fileRepoName = repoSupplier.getRepositoryName();
+            String filename = EnvSettingsGetter.configurationPath() + "file-repository-" + fileRepoName + ".yml";
+            Path path = Paths.get(filename);
+            if (Files.exists(path)) {
+                try {
+                    FileRepoManager.register(fileRepoName,
+                            repoSupplier.getSupplier(yaml.loadAs(Files.newInputStream(path), repoSupplier.getArgumentType())));
+                } catch (IOException e) {
+                    log.error("fail to load file: {}", fileRepoName, e);
+                }
             }
         });
         try {
@@ -41,16 +44,5 @@ public class FileRepoLoader extends HttpServlet {
             log.error(e.getLocalizedMessage(), e);
             throw new ServletException("fail to read client configuration", e);
         }
-    }
-
-    private LocalRepositoryPath[] buildBasePath(FileRepoLocalConfig config) {
-        LocalRepositoryPath[] paths = config.getPaths();
-        for (LocalRepositoryPath path : paths) {
-            File basePath = new File(path.getLocation());
-            if (!basePath.exists()) {
-                basePath.mkdirs();
-            }
-        }
-        return paths;
     }
 }

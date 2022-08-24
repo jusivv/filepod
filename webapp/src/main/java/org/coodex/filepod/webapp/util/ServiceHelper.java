@@ -36,4 +36,13 @@ public class ServiceHelper {
         }
     }
 
+    public static <T> void iterateProvider(Class<T> clazz, Consumer<T> consumer) {
+        ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz);
+        for (Iterator<T> it = serviceLoader.iterator(); it.hasNext(); ) {
+            T provider = it.next();
+            log.debug("hit provider: {} for class: {}", provider.getClass().getName(), clazz.getName());
+            consumer.accept(provider);
+        }
+    }
+
 }

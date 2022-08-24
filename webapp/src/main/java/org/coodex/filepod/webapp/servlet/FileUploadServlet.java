@@ -8,16 +8,12 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 import org.coodex.filepod.api.IAccessController;
 import org.coodex.filepod.api.ICryptoStreamWrapper;
-import org.coodex.filepod.config.FileRepoConfig;
 import org.coodex.filepod.pojo.FilepodMetaInf;
 import org.coodex.filepod.webapp.config.ClientSettings;
-import org.coodex.filepod.webapp.config.FileRepoConfigManager;
 import org.coodex.filepod.webapp.repo.FileRepoManager;
 import org.coodex.filepod.webapp.util.*;
 import org.coodex.filerepository.api.IFileRepository;
 import org.coodex.util.Common;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
@@ -28,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -36,8 +33,6 @@ import java.util.concurrent.Executors;
 
 @WebServlet(urlPatterns = {"/attachments/upload/byform/*"}, asyncSupported = true)
 public class FileUploadServlet extends HttpServlet {
-    private static Logger log = LoggerFactory.getLogger(FileUploadServlet.class);
-
     private Executor executor = Executors.newCachedThreadPool();
 
     private Base64 base64 = new Base64();
@@ -52,21 +47,16 @@ public class FileUploadServlet extends HttpServlet {
             IAccessController accessController = ServiceHelper.getProvider(
                     ClientSettings.getString(context.getClientId() + ".accessController", "forbidden"),
                     IAccessController.class);
-            accessController.load((clientId, paramName, defaultValue) -> {
-                return ClientSettings.getString(clientId + "." + paramName, defaultValue);
-            });
+            accessController.load((clientId, paramName, defaultValue) ->
+                    ClientSettings.getString(clientId + "." + paramName, defaultValue));
             if (accessController.writable(context.getClientId(), context.getToken())) {
                 // upload
                 //// repo name
                 String repo = ClientSettings.getString(context.getClientId() + ".fileRepository",
                         "local");
                 //// get repo
-                IFileRepository fileRepository = FileRepoManager.getRepo(repo).orElseThrow(() -> {
-                    return new RuntimeException("no file repository for " + repo);
-                });
-                //// get repo config
-                FileRepoConfig fileRepoConfig = ServiceHelper.getProvider(repo, FileRepoConfig.class);
-                FileRepoConfigManager.get(repo, fileRepoConfig);
+                IFileRepository fileRepository = FileRepoManager.getRepo(repo).orElseThrow(
+                        () -> new RuntimeException("no file repository for " + repo));
                 ServletFileUpload uploadHandler = new ServletFileUpload(new DiskFileItemFactory());
                 List<FileItem> items = uploadHandler.parseRequest(request);
                 List<FilepodMetaInf> metaInfos = new ArrayList<>();
@@ -79,29 +69,31 @@ public class FileUploadServlet extends HttpServlet {
                         metaInf.setContentType(item.getContentType());
                         metaInf.setFileSize(item.getSize());
                         metaInf.setClientId(context.getClientId());
-                        if (context.isEncrypt()) {
-                            metaInf.setCipherModel(fileRepoConfig.getDefaultCipher());
-                        }
                         // file store
                         InputStream is = item.getInputStream();
-                        if (!Common.isBlank(metaInf.getCipherModel())) {
+                        if (context.isEncrypt()) {
                             // crypto
+                            metaInf.setCipherModel(
+                                    ClientSettings.getString(context.getClientId() + ".defaultCipher", "aes.v2")
+                            );
+                            String serverKey = ClientSettings.getString(
+                                    context.getClientId() + ".serverKey", null);
                             ICryptoStreamWrapper streamWrapper = ServiceHelper.getProvider(metaInf.getCipherModel(),
                                     ICryptoStreamWrapper.class);
-                            streamWrapper.init(base64.decode(fileRepoConfig.getServerKey()), metaInf);
+                            streamWrapper.init(serverKey != null ? base64.decode(serverKey) : new byte[0],
+                                    metaInf);
                             is = streamWrapper.getInput(is);
                         }
                         metaInf.setFileId(fileRepository.save(is, metaInf));
                         metaInfos.add(metaInf);
                         // notify
-                        CompletableFuture.runAsync(() -> {
-                            accessController.notify(context.getClientId() , context.getToken(),
-                                    metaInf.getFileId());
-                        }, executor);
+                        CompletableFuture.runAsync(
+                                () -> accessController.notify(context.getClientId() , context.getToken(), metaInf.getFileId()),
+                                executor);
                     }
                 }
                 response.setStatus(HttpServletResponse.SC_OK);
-                response.getOutputStream().println(JSON.toJSONString(metaInfos));
+                response.getOutputStream().write(JSON.toJSONString(metaInfos).getBytes(StandardCharsets.UTF_8));
             } else {
                 throw new FilepodServletException(HttpServletResponse.SC_FORBIDDEN,
                         "reject to upload from " + context.getClientId());
