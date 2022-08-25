@@ -1,4 +1,4 @@
-package org.coodex.filepod.repo;
+package org.coodex.filepod.supplier;
 
 import org.coodex.filepod.api.IFileRepositorySupplier;
 import org.coodex.filerepository.api.IFileRepository;

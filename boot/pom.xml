@@ -29,12 +29,9 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.coodex</groupId>
-            <artifactId>file-repository-local</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.coodex</groupId>
-            <artifactId>file-repository-alioss</artifactId>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>filepod-supplier</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
