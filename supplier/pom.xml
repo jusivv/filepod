@@ -9,12 +9,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>filepod-api</artifactId>
+    <artifactId>filepod-supplier</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>org.coodex</groupId>
-            <artifactId>file-repository-api</artifactId>
+            <artifactId>file-repository-local</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>filepod-api</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 

@@ -13,30 +13,43 @@ import java.util.concurrent.TimeUnit;
 
 public class ClientSettings {
     private static Logger log = LoggerFactory.getLogger(ClientSettings.class);
-    private static YAMLConfiguration configuration;
+    private static ReloadingFileBasedConfigurationBuilder<YAMLConfiguration> builder;
 
     public static void load(String fileName) throws ConfigurationException {
         Parameters parameters = new Parameters();
         File configFile = new File(fileName);
-        ReloadingFileBasedConfigurationBuilder<YAMLConfiguration> builder =
-                new ReloadingFileBasedConfigurationBuilder<>(YAMLConfiguration.class);
+        builder = new ReloadingFileBasedConfigurationBuilder<>(YAMLConfiguration.class);
         builder.configure(parameters.fileBased().setFile(configFile));
+//        builder.getReloadingController().addEventListener(ReloadingEvent.ANY, event -> {
+//            log.debug("get event {} on {}", event.getEventType().getName(), event.getData());
+//            event.getController().resetReloadingState();
+//        });
         PeriodicReloadingTrigger trigger = new PeriodicReloadingTrigger(builder.getReloadingController(),
-                null, 1, TimeUnit.MINUTES);
+                fileName, 1, TimeUnit.MINUTES);
         trigger.start();
-        configuration = builder.getConfiguration();
+        builder.getConfiguration();
         log.debug("load client settings from {}", fileName);
     }
 
     public static <T> T get(String key, Class<T> valueClass, T defaultValue) {
-        return configuration.get(valueClass, key, defaultValue);
+        try {
+            return builder.getConfiguration().get(valueClass, key, defaultValue);
+        } catch (ConfigurationException e) {
+            log.error(e.getLocalizedMessage(), e);
+            return defaultValue;
+        }
     }
 
     public static String getString(String key, String defaultValue) {
-        return configuration.getString(key, defaultValue);
+        return get(key, String.class, defaultValue);
     }
 
     public static String[] getStringArray(String key) {
-        return configuration.getStringArray(key);
+        try {
+            return builder.getConfiguration().getStringArray(key);
+        } catch (ConfigurationException e) {
+            log.error(e.getLocalizedMessage(), e);
+            return null;
+        }
     }
 }

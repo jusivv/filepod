@@ -22,7 +22,7 @@ Provide implements of access controller & stream wrapper (for encryption)
 
 ### filepod-boot
 
-Startup service with the embed tomcat
+Startup service with Servlet Container (like Apache Tomcat) or by org.coodex.filepod.boot.Launcher (need Env CONFIGURATION_PATH).
 
 ## Upload
 
@@ -95,7 +95,7 @@ or
 
 ```shell
 # build
-docker build -t filepod:1.0.0 .
+docker build -t filepod:1.2.0 .
 # run & stop
 docker-compose up -d
 docker-compose down

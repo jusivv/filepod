@@ -28,7 +28,6 @@ public class Launcher {
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(port);
 
-
         if (args.length > 1) {
             log.debug("production mode");
             File webapp = new File(args[1]);
@@ -40,8 +39,8 @@ public class Launcher {
             }
         } else {
             log.debug("debug mode");
-            tomcat.setBaseDir(new File("webapp/target").getAbsolutePath());
-            Context context = tomcat.addWebapp("", new File("webapp/src/main/webapp/").getAbsolutePath());
+            tomcat.setBaseDir(new File("boot/target").getAbsolutePath());
+            Context context = tomcat.addWebapp("", new File("boot/src/main/webapp/").getAbsolutePath());
             WebResourceRoot resourceRoot = new StandardRoot(context);
             resourceRoot.addPreResources(new DirResourceSet(resourceRoot, "/WEB-INF/classes/",
                     new File("webapp/target/classes").getAbsolutePath(), "/"));

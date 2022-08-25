@@ -6,6 +6,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.coodex.filepod.api.IAccessController;
 import org.coodex.filepod.api.ICryptoStreamWrapper;
 import org.coodex.filepod.pojo.FilepodMetaInf;
@@ -13,7 +14,6 @@ import org.coodex.filepod.webapp.config.ClientSettings;
 import org.coodex.filepod.webapp.repo.FileRepoManager;
 import org.coodex.filepod.webapp.util.*;
 import org.coodex.filerepository.api.IFileRepository;
-import org.coodex.util.Common;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
@@ -61,7 +61,7 @@ public class FileUploadServlet extends HttpServlet {
                 List<FileItem> items = uploadHandler.parseRequest(request);
                 List<FilepodMetaInf> metaInfos = new ArrayList<>();
                 for (FileItem item : items) {
-                    if (!item.isFormField() && !Common.isBlank(item.getName())) {
+                    if (!item.isFormField() && !StringUtils.isEmpty(item.getName())) {
                         // meta inf
                         FilepodMetaInf metaInf = new FilepodMetaInf();
                         metaInf.setFileName(item.getName());

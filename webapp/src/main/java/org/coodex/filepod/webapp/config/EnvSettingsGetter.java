@@ -1,15 +1,14 @@
 package org.coodex.filepod.webapp.config;
 
-import org.coodex.util.Common;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 
 public class EnvSettingsGetter {
     public static final String CONFIGURATION_PATH_KEY = "CONFIGURATION_PATH";
-    public static final String LOGBACK_CONFIG_FILE_KEY = "LOGBACK_CONFIG_FILE";
     public static String getValue(String name, String defaultValue) {
         String value = System.getenv(name);
-        if (Common.isBlank(value)) {
+        if (StringUtils.isEmpty(value)) {
             value = System.getProperty(name, defaultValue);
         }
         return value;
@@ -21,7 +20,7 @@ public class EnvSettingsGetter {
 
     public static String configurationPath() {
         String path = getValue(CONFIGURATION_PATH_KEY);
-        if (Common.isBlank(path)) {
+        if (StringUtils.isEmpty(path)) {
             path = EnvSettingsGetter.class.getClassLoader().getResource("").getPath();
             path += (path.endsWith(File.separator) ? "config" : "/config");
         }
@@ -29,9 +28,5 @@ public class EnvSettingsGetter {
             path += File.separator;
         }
         return path;
-    }
-
-    public static String logbackConfigFile() {
-        return getValue(LOGBACK_CONFIG_FILE_KEY, "logback.xml");
     }
 }
