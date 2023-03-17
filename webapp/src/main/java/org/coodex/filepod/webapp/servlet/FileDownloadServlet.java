@@ -93,11 +93,9 @@ public class FileDownloadServlet extends HttpServlet {
                                             System.currentTimeMillis()));
                     ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(response.getOutputStream());
                     try {
-                        int count = 0;
                         for (FilepodMetaInf metaInf : metaInfs) {
-                            count++;
                             ZipArchiveEntry zipArchiveEntry = new ZipArchiveEntry(
-                                    count + "-" + metaInf.getFileName()
+                                    metaInf.getFileId() + "_" + metaInf.getFileName()
                             );
                             zipArchiveOutputStream.putArchiveEntry(zipArchiveEntry);
                             // crypto
