@@ -48,23 +48,23 @@ public class CorsFilter implements Filter {
         if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
             HttpServletRequest req = (HttpServletRequest) request;
             HttpServletResponse resp = (HttpServletResponse) response;
-            if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
-                printRequest(req, settings.isDebug());
-                String origin = req.getHeader("Origin");
-                for (String o : settings.getAllowedOrigins()) {
-                    if (o.equalsIgnoreCase("*") || o.equalsIgnoreCase(origin)) {
-                        resp.addHeader("Access-Control-Allow-Origin", origin);
-                        break;
-                    }
+            printRequest(req, settings.isDebug());
+            String origin = req.getHeader("Origin");
+            for (String o : settings.getAllowedOrigins()) {
+                if (o.equalsIgnoreCase("*") || o.equalsIgnoreCase(origin)) {
+                    resp.addHeader("Access-Control-Allow-Origin", origin);
+                    break;
                 }
-                resp.addHeader("Access-Control-Allow-Methods",
-                        StringUtils.join(settings.getAllowedMethods(), ","));
-                resp.addHeader("Access-Control-Allow-Headers",
-                        StringUtils.join(settings.getAllowedHeaders(), ","));
-                resp.addHeader("Access-Control-Expose-Headers",
-                        StringUtils.join(settings.getExposedHeaders(), ","));
-                resp.addHeader("Access-Control-Allow-Credentials", "true");
-                resp.addHeader("Access-Control-Max-Age", Long.toString(settings.getMaxAge()));
+            }
+            resp.addHeader("Access-Control-Allow-Methods",
+                StringUtils.join(settings.getAllowedMethods(), ","));
+            resp.addHeader("Access-Control-Allow-Headers",
+                StringUtils.join(settings.getAllowedHeaders(), ","));
+            resp.addHeader("Access-Control-Expose-Headers",
+                StringUtils.join(settings.getExposedHeaders(), ","));
+            resp.addHeader("Access-Control-Allow-Credentials", "true");
+            resp.addHeader("Access-Control-Max-Age", Long.toString(settings.getMaxAge()));
+            if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
                 return;
             }
         }
