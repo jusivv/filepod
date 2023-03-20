@@ -13,16 +13,23 @@ Define the API of access controller & stream wrapper.
 Http servlet for upload/download, base on Servlet 4.0.
 
 - Support file encryption
-- Support multi-files package & download
-- Support download by range (single file)
+- Support multi-files download (in a zip)
+- Support download by range (only single file download)
 
 ### filepod-security
 
-Provide implements of access controller & stream wrapper (for encryption)
+Default implements of access controller & stream wrapper (for encryption)
 
 ### filepod-boot
 
-Startup service with Servlet Container (like Apache Tomcat) or by org.coodex.filepod.boot.Launcher (need Env CONFIGURATION_PATH).
+Startup service with main class org.coodex.filepod.boot.Launcher.
+Some parameter can be assigned with environment (only full name) or argument.
+- FilepodConfigPath (c for short), specify the path of filepod configurations.
+- ServerAddress (h for short), specify server binding address, default 0.0.0.0.
+- ServerPort (p for short), specify server listening port, default 8080.
+- ServerBaseDir (b for short, optional), specify server base directory.
+- ServerContextPath (s for short), specify server context path, default /.
+- LogbackConfigFile (l for short), specify logback config file, default logback.xml.
 
 ## Upload
 
@@ -95,7 +102,7 @@ or
 
 ```shell
 # build
-docker build -t filepod:1.2.0 .
+docker build -t filepod:1.3.0 .
 # run & stop
 docker-compose up -d
 docker-compose down

@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.util.Enumeration;
 
 @WebFilter(urlPatterns = {"/*"}, asyncSupported = true)
+@Deprecated
 public class CorsFilter implements Filter {
     private static Logger log = LoggerFactory.getLogger(CorsFilter.class);
     private CorsFilterSettings settings;

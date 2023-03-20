@@ -1,15 +1,31 @@
 package org.coodex.filepod.webapp.config;
 
+import org.apache.commons.cli.*;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
 public class EnvSettingsGetter {
-    public static final String CONFIGURATION_PATH_KEY = "CONFIGURATION_PATH";
+    private static Logger log = LoggerFactory.getLogger(EnvSettingsGetter.class);
+    public static final String CONFIGURATION_PATH_KEY = "FilepodConfigPath";
+    private static Options options = new Options();
+    private static CommandLine cmd;
+
     public static String getValue(String name, String defaultValue) {
-        String value = System.getenv(name);
+        String value = null;
+        if (cmd != null) {
+            value = cmd.getOptionValue(name);
+        }
         if (StringUtils.isEmpty(value)) {
-            value = System.getProperty(name, defaultValue);
+            value = System.getProperty(name);
+        }
+        if (StringUtils.isEmpty(value)) {
+            value = System.getenv(name);
+        }
+        if (StringUtils.isEmpty(value)) {
+            value = defaultValue;
         }
         return value;
     }
@@ -21,12 +37,26 @@ public class EnvSettingsGetter {
     public static String configurationPath() {
         String path = getValue(CONFIGURATION_PATH_KEY);
         if (StringUtils.isEmpty(path)) {
-            path = EnvSettingsGetter.class.getClassLoader().getResource("").getPath();
+            path = new File(".").getAbsolutePath();
             path += (path.endsWith(File.separator) ? "config" : "/config");
         }
         if (!path.endsWith(File.separator)) {
             path += File.separator;
         }
         return path;
+    }
+
+    public static void addArgumentDef(String opt, String longOpt, String desc) {
+        options.addOption(opt, longOpt, true, desc);
+    }
+
+    public static void parseArgs(String[] args) {
+        CommandLineParser parser = new DefaultParser();
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            log.warn(e.getLocalizedMessage(), e);
+        }
+
     }
 }

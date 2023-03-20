@@ -1,0 +1,13 @@
+cors:
+  allowed:
+    origins: "*"
+    methods: "GET,POST,OPTIONS,PUT,DELETE,TRACE"
+    headers: "Content-Type,Content-Length,Host,User-Agent,Cache-Control,Accept,Accept-Encoding,Connection"
+  exposed:
+    headers: "CONCRETE-TOKEN-ID"
+  support:
+    credentials: "false"
+  preflight:
+    maxage: "1800"
+  request:
+    decorate: "true"
