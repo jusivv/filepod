@@ -16,6 +16,6 @@ RUN cd /dep/file-repository && mvn install -U -am -pl file-repository-sample -Dm
 # package stage
 FROM openjdk:17.0.2-slim
 WORKDIR /app
-COPY --from=build /src/filepod/boot/target/filepod-jar-with-dependencies.jar ./filepod.jar
-CMD ["java", "-jar", "/app/filepod.jar"]
+COPY --from=build /src/filepod/boot/target/filepod-standalone.jar ./
+CMD ["java", "-jar", "/app/filepod-standalone.jar"]
 
