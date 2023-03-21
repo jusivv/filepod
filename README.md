@@ -10,7 +10,7 @@ A simple & security file upload/download service, depend on [file-repository 2.0
   mvn clean package -U -am -pl boot -Dmaven.test.skip=true
 ```
 
-You can get a fat jar named 'filepod-jar-with-dependencies.jar in boot/target'
+You can get a fat jar named 'filepod-standalone.jar in boot/target'
 
 ## Configuration
 
@@ -45,7 +45,7 @@ Custom logback configuration files, can be assigned with environment "LogbackCon
 ## Run
 
 ```shell
-java -jar filepod-jar-with-dependencies.jar -c=<configPath>
+java -jar filepod-standalone.jar -c=<configPath>
 ```
 
 filepod service will listening on 8080 port.
@@ -151,7 +151,7 @@ or
 
 ```shell
   # build
-  docker build -t coodex/filepod:1.3.0 .
+  docker build -t coodex/filepod:<latest release version> .
   # run & stop
   docker-compose up -d
   docker-compose down
