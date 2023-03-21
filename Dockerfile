@@ -5,7 +5,7 @@ WORKDIR /
 RUN git clone --depth 1 --branch 2.0.3 https://github.com/jusivv/file-repository
 
 # build stage
-FROM maven:3.8.5-openjdk-17 AS build
+FROM maven:3.9.0-ibm-semeru-17-focal AS build
 WORKDIR /dep
 COPY --from=dep /file-repository ./file-repository
 WORKDIR /src/filepod
@@ -17,5 +17,5 @@ RUN cd /dep/file-repository && mvn install -U -am -pl file-repository-sample -Dm
 FROM openjdk:17.0.2-slim
 WORKDIR /app
 COPY --from=build /src/filepod/boot/target/filepod-jar-with-dependencies.jar ./filepod.jar
-ENTRYPOINT ["java", "-jar", "/app/filepod.jar"]
+CMD ["java", "-jar", "/app/filepod.jar"]
 

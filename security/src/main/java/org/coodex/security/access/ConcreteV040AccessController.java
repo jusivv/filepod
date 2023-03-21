@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 public class ConcreteV040AccessController extends ConcreteAccessController {
     @Override
     public boolean accept(String tag) {
-        return "concrete_v0.4.0".equalsIgnoreCase(tag);
+        return "concrete_v0.4.x".equalsIgnoreCase(tag) || "concrete_v0.4.0".equalsIgnoreCase(tag);
     }
 
     @Override

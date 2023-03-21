@@ -2,6 +2,62 @@
 
 A simple & security file upload/download service, depend on [file-repository 2.0.3](https://github.com/jusivv/file-repository).
 
+## Usage
+
+## Build 
+
+```shell
+  mvn clean package -U -am -pl boot -Dmaven.test.skip=true
+```
+
+You can get a fat jar named 'filepod-jar-with-dependencies.jar in boot/target'
+
+## Configuration
+
+### client.yml
+
+List client(s) who use filepod.
+
+```yaml
+  <clientId>:
+    scope: <clientId, ... or *> # who's file will be accessed, default itself
+    accessController: <totp|concrete|concrete_v0.4.x|session>
+    fileRepository: <local|alioss>
+    defaultCipher: <aes.v2|aes.v1> # default cipher for stored file aes.v2 (recommended): CTR; aes.v1: CFB
+    serverKey: <keyInBase64>
+    totpSecret: <secretInBase64> # only for accessController=totp
+```
+
+### file-repository-<local|alioss>.yml
+
+- At least one file repository to save file.
+- Depend on [file-repository](https://github.com/jusivv/file-repository), currently only "local" supported.
+- Yaml file content is arguments for creating file repository
+
+### org.coodex.filepod.filter.ApacheCorsFilterFacade.yml
+
+Configurations for Apache CorsFilter
+
+### logback configuration files
+
+Custom logback configuration files, can be assigned with environment "LogbackConfigFile" or argument "-l".
+
+## Run
+
+```shell
+java -jar filepod-jar-with-dependencies.jar -c=<configPath>
+```
+
+filepod service will listening on 8080 port.
+
+Some parameter can be assigned with environment (only full name) or argument.
+- FilepodConfigPath (c for short), specify the path of filepod configurations.
+- ServerAddress (h for short), specify server binding address, default 0.0.0.0.
+- ServerPort (p for short), specify server listening port, default 8080.
+- ServerBaseDir (b for short, optional), specify server base directory.
+- ServerContextPath (s for short), specify server context path, default /.
+- LogbackConfigFile (l for short), specify logback config file, default logback.xml.
+
 ## Modules
 
 ### filepod-api
@@ -23,13 +79,6 @@ Default implements of access controller & stream wrapper (for encryption)
 ### filepod-boot
 
 Startup service with main class org.coodex.filepod.boot.Launcher.
-Some parameter can be assigned with environment (only full name) or argument.
-- FilepodConfigPath (c for short), specify the path of filepod configurations.
-- ServerAddress (h for short), specify server binding address, default 0.0.0.0.
-- ServerPort (p for short), specify server listening port, default 8080.
-- ServerBaseDir (b for short, optional), specify server base directory.
-- ServerContextPath (s for short), specify server context path, default /.
-- LogbackConfigFile (l for short), specify logback config file, default logback.xml.
 
 ## Upload
 
@@ -42,7 +91,7 @@ Some parameter can be assigned with environment (only full name) or argument.
 - response a array contains file information, for example:
 
 ```json
-[{
+  [{
     "client": "test",
     "fileName": "image.jpg",
     "extName": "jpg",
@@ -50,7 +99,7 @@ Some parameter can be assigned with environment (only full name) or argument.
     "fileSize": 80384,
     "contentType": "image/jpeg",
     "cipherModel": "aes.v2"
-}]
+  }]
 ```
 
 ## Download
@@ -84,16 +133,16 @@ Support Concrete framework, see filepod.manual.concrete.md.
 - Request body sample:
 
 ```JSON
-{
-"token": "file-client-user-token"
-}
+  {
+    "token": "file-client-user-token"
+  }
 ```
 or
 ```JSON
-{
-"token": "file-client-user-token",
-"fileId": "file-id or file-ids split with ','"
-}
+  {
+    "token": "file-client-user-token",
+    "fileId": "file-id or file-ids split with ','"
+  }
 ```
 
 - Response status 200 means allowed
@@ -101,9 +150,9 @@ or
 ## Dockerize
 
 ```shell
-# build
-docker build -t filepod:1.3.0 .
-# run & stop
-docker-compose up -d
-docker-compose down
+  # build
+  docker build -t coodex/filepod:1.3.0 .
+  # run & stop
+  docker-compose up -d
+  docker-compose down
 ```
