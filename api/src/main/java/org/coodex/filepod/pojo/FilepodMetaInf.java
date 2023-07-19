@@ -39,4 +39,12 @@ public class FilepodMetaInf extends FileMetaInf {
     public void setFileId(String fileId) {
         this.fileId = fileId;
     }
+
+    public String getId() {
+        return fileId;
+    }
+
+    public String getName() {
+        return super.getFileName();
+    }
 }
