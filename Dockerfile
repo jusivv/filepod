@@ -1,8 +1,10 @@
-ARG FILE_REPOSITORY_VERSION=2.0.3
+# wait for optimizing
+
 # dependency
 FROM bitnami/git:2.37.1 as dep
+ARG FILE_REPOSITORY_VERSION=2.0.4
 WORKDIR /
-RUN git clone --depth 1 --branch 2.0.3 https://github.com/jusivv/file-repository
+RUN git clone --depth 1 --branch $FILE_REPOSITORY_VERSION https://github.com/jusivv/file-repository
 
 # build stage
 FROM maven:3.9.0-ibm-semeru-17-focal AS build

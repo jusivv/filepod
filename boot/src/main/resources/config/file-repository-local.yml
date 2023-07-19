@@ -1,9 +1,14 @@
-- location: "/Users/sujiwu/Downloads/fileRepo/save1/"
-  readable: true
-  writable: true
-- location: "/Users/sujiwu/Downloads/fileRepo/save2/"
-  readable: true
-  writable: false
-- location: "/Users/sujiwu/Downloads/fileRepo/save3/"
-  readable: true
-  writable: true
+directories:
+  - location: "/Users/sujiwu/Downloads/fileRepo/save1/"
+    readable: true
+    writable: true
+  - location: "/Users/sujiwu/Downloads/fileRepo/save2/"
+    readable: true
+    writable: false
+  - location: "/Users/sujiwu/Downloads/fileRepo/save3/"
+    readable: true
+    writable: true
+
+pathGenerators:
+#  - "org.coodex.filerepository.local.DateTimePathGenerator"
+  - "org.coodex.filerepository.local.HashPathGenerator"
