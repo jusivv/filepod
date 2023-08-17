@@ -15,6 +15,10 @@ public class FilepodMetaInf extends FileMetaInf {
      * file identify
      */
     private String fileId;
+    /**
+     * alias of fileName
+     */
+    private String name;
 
     public String getContentType() {
         return contentType;
@@ -45,6 +49,10 @@ public class FilepodMetaInf extends FileMetaInf {
     }
 
     public String getName() {
-        return super.getFileName();
+        return name != null && !name.equals("") ? name : getFileName();
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
