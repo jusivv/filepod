@@ -95,7 +95,7 @@ public class FileDownloadServlet extends HttpServlet {
                     try {
                         for (FilepodMetaInf metaInf : metaInfs) {
                             ZipArchiveEntry zipArchiveEntry = new ZipArchiveEntry(
-                                    metaInf.getFileId() + "_" + metaInf.getFileName()
+                                    metaInf.getFileId() + "_" + getFileName(metaInf)
                             );
                             zipArchiveOutputStream.putArchiveEntry(zipArchiveEntry);
                             // crypto
@@ -123,7 +123,7 @@ public class FileDownloadServlet extends HttpServlet {
                     response.setHeader("Content-Type", metaInf.getContentType());
                     response.setHeader("Content-Disposition",
                                     String.format("%s;filename=\"%s\"", getContentDispType(metaInf),
-                                            URLEncoder.encode(metaInf.getFileName(), "UTF-8")));
+                                            URLEncoder.encode(getFileName(metaInf), "UTF-8")));
                     OutputStream outputStream = response.getOutputStream();
                     try {
                         // range
@@ -200,5 +200,9 @@ public class FileDownloadServlet extends HttpServlet {
         String contentType = metaInf.getContentType();
         return contentType.startsWith("text") || contentType.startsWith("image") ? "inline"
                 : "attachment";
+    }
+
+    private String getFileName(FilepodMetaInf metaInf) {
+        return !StringUtils.isEmpty(metaInf.getFileName()) ? metaInf.getFileName() : metaInf.getName();
     }
 }
