@@ -111,6 +111,27 @@ Startup service with main class org.coodex.filepod.boot.Launcher.
 - you can join fileId with "," to download multi-files, files will be packed in a zip file
 - Support "RANGE" header (only single file & single range)
 
+## delete
+
+- delete url: http(s)://\<fileserver\>/attachments/delete/{clientId}/{token}/{fileId,fileId,...}
+- clientId: file-client id who has permission to delete files ("<clientId>.deletable" option in client.yml is true)
+- token: file access token (session token or one time password)
+- fileId: file id which you want to delete
+- you can join fileId with "," to delete multi-files
+- response status is 200 when success to delete file, response content: 
+
+```json
+  [{
+    "client": "test",
+    "fileName": "image.jpg",
+    "extName": "jpg",
+    "fileId": "test$9813ada076f04c949e19eefcd9a5c4d0",
+    "fileSize": 80384,
+    "contentType": "image/jpeg",
+    "cipherModel": "aes.v2"
+  }]
+```
+
 ## Access controller
 
 Implement in filepod-security
