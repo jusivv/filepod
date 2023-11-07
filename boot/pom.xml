@@ -53,6 +53,8 @@
                     <archive>
                         <manifest>
                             <mainClass>org.coodex.filepod.boot.Launcher</mainClass>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                     <descriptors>

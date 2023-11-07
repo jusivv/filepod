@@ -37,6 +37,12 @@ public class Launcher {
             );
         });
         EnvSettingsGetter.parseArgs(args);
+        // version
+        if (EnvSettingsGetter.hasArgument("version")) {
+            System.out.println(Launcher.class.getPackage().getImplementationVersion());
+            return;
+        }
+
         // log
         LogbackConfigurator.load();
         // address

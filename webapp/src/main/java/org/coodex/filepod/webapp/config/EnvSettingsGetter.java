@@ -34,6 +34,10 @@ public class EnvSettingsGetter {
         return getValue(name, null);
     }
 
+    public static boolean hasArgument(String name) {
+        return cmd.hasOption(name);
+    }
+
     public static String configurationPath() {
         String path = getValue(CONFIGURATION_PATH_KEY);
         if (StringUtils.isEmpty(path)) {
@@ -51,6 +55,7 @@ public class EnvSettingsGetter {
     }
 
     public static void parseArgs(String[] args) {
+        options.addOption("V", "version", false, "show version");
         CommandLineParser parser = new DefaultParser();
         try {
             cmd = parser.parse(options, args);
