@@ -34,6 +34,10 @@ public class EnvSettingsGetter {
         return getValue(name, null);
     }
 
+    public static boolean hasArgument(String name) {
+        return cmd.hasOption(name);
+    }
+
     public static String configurationPath() {
         String path = getValue(CONFIGURATION_PATH_KEY);
         if (StringUtils.isEmpty(path)) {
@@ -47,7 +51,11 @@ public class EnvSettingsGetter {
     }
 
     public static void addArgumentDef(String opt, String longOpt, String desc) {
-        options.addOption(opt, longOpt, true, desc);
+        addArgumentDef(opt, longOpt, true, desc);
+    }
+
+    public static void addArgumentDef(String opt, String longOpt, boolean requireValue, String desc) {
+        options.addOption(opt, longOpt, requireValue, desc);
     }
 
     public static void parseArgs(String[] args) {

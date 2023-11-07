@@ -17,7 +17,8 @@ public class ArgDefIterator {
         new ArgumentDefine("b", ARG_SERVER_BASE_DIR, "Specify server base directory"),
         new ArgumentDefine("s", ARG_SERVER_CONTEXT_PATH, "Specify server context path, default /"),
         new ArgumentDefine("l", ARG_LOGBACK_CONFIG_FILE,
-            "Specify logback config file, default logback.xml")
+            "Specify logback config file, default logback.xml"),
+        new ArgumentDefine("v", ARG_VERSION, false, "show version")
     };
 
     public static void iterate(Consumer<ArgumentDefine> consumer) {
