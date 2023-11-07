@@ -51,11 +51,14 @@ public class EnvSettingsGetter {
     }
 
     public static void addArgumentDef(String opt, String longOpt, String desc) {
-        options.addOption(opt, longOpt, true, desc);
+        addArgumentDef(opt, longOpt, true, desc);
+    }
+
+    public static void addArgumentDef(String opt, String longOpt, boolean requireValue, String desc) {
+        options.addOption(opt, longOpt, requireValue, desc);
     }
 
     public static void parseArgs(String[] args) {
-        options.addOption("V", "version", false, "show version");
         CommandLineParser parser = new DefaultParser();
         try {
             cmd = parser.parse(options, args);

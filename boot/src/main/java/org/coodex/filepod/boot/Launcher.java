@@ -33,12 +33,13 @@ public class Launcher {
             EnvSettingsGetter.addArgumentDef(
                 argumentDefine.getOption(),
                 argumentDefine.getLongOption(),
+                argumentDefine.isValueRequired(),
                 argumentDefine.getDescription()
             );
         });
         EnvSettingsGetter.parseArgs(args);
         // version
-        if (EnvSettingsGetter.hasArgument("version")) {
+        if (EnvSettingsGetter.hasArgument(ARG_VERSION)) {
             System.out.println(Launcher.class.getPackage().getImplementationVersion());
             return;
         }
