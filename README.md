@@ -177,3 +177,53 @@ or
   docker-compose up -d
   docker-compose down
 ```
+
+## Install filepod as a linux system service
+
+- Execute "systemctl --version", need 232 or newer
+- Move filepod jar into your path, for example
+
+```shell
+  mv filepod-standalone.jar /usr/bin/filepod.jar
+```
+
+- Put your config files into directory /etc/filepod
+
+- Create service file: /etc/systemd/system/filepod.service
+
+```properties
+  [Unit]
+  Description=filepod
+  After=network.target network-online.target
+  Requires=network-online.target
+  [Service]
+  Type=simple
+  ExecStart=java -jar /usr/bin/filepod.jar -c /etc/filepod
+  ExecReload=/bin/kill -s HUP $MAINPID
+  ExecStop=/bin/kill -s QUIT $MAINPID
+  [Install]
+  WantedBy=multi-user.target
+```
+
+- Create environment variables file for logback: /etc/systemd/system/filepod.service.d/logback.conf (file name must ends in ".conf")
+
+```properties
+  [Service]
+  Environment="LogbackConfigFile=logback-file.xml"
+  Environment="LOG_HOME=/var/log/filepod"
+```
+
+- Reload & enable filepod service
+
+```shell
+  sudo systemctl daemon-reload
+  sudo systemctl enable --now filepod
+```
+
+- Verify that it is running
+
+```shell
+  systemctl status filepod
+```
+
+- Now filepod is ready to service you
