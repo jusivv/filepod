@@ -181,14 +181,29 @@ or
 ## Install filepod as a linux system service
 
 - Execute "systemctl --version", need 232 or newer
+- Create new group
+
+```shell
+  groupadd -r filepod
+  # or
+  groupadd --system filepod
+```
+
+- Create new user
+
+```shell
+  useradd -r -m -g filepod -d /var/lib/filepod -s /usr/sbin/nologin -c "filepod server" filepod
+  # or
+  useradd --system --create-home --gid filepod --home-dir /var/lib/filepod --shell /usr/sbin/nologin --comment "filepod server" filepod
+```
+
 - Move filepod jar into your path, for example
 
 ```shell
-  mv filepod-standalone.jar /usr/bin/filepod.jar
+  mv filepod-standalone.jar /var/lib/filepod/filepod.jar
 ```
 
 - Put your config files into directory /etc/filepod
-
 - Create service file: /etc/systemd/system/filepod.service
 
 ```properties
@@ -198,7 +213,9 @@ or
   Requires=network-online.target
   [Service]
   Type=simple
-  ExecStart=java -jar /usr/bin/filepod.jar -c /etc/filepod
+  Group=filepod
+  User=filepod
+  ExecStart=java -jar /var/lib/filepod/filepod.jar -c /etc/filepod
   ExecReload=/bin/kill -s HUP $MAINPID
   ExecStop=/bin/kill -s QUIT $MAINPID
   [Install]
@@ -227,3 +244,4 @@ or
 ```
 
 - Now filepod is ready to service you
+- Notice: the owner of "filepod.jar" and log directory (/var/log/filepod) is filepod, the privilege of configuration files are 755
