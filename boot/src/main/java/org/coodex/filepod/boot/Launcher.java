@@ -28,6 +28,8 @@ public class Launcher {
     
     public static void main(String[] args) throws LifecycleException {
         long start = System.currentTimeMillis();
+        // get jar version
+        String jarVersion = Launcher.class.getPackage().getImplementationVersion();
         // load args
         ArgDefIterator.iterate(argumentDefine -> {
             EnvSettingsGetter.addArgumentDef(
@@ -40,7 +42,7 @@ public class Launcher {
         EnvSettingsGetter.parseArgs(args);
         // version
         if (EnvSettingsGetter.hasArgument(ARG_VERSION)) {
-            System.out.println(Launcher.class.getPackage().getImplementationVersion());
+            System.out.println(jarVersion);
             return;
         }
 
@@ -115,6 +117,7 @@ public class Launcher {
             connector.setProperty("address", address);
         }
         tomcat.start();
+        log.info("filepod version: {}", jarVersion);
         log.info("service on {}:{}, context path: [{}]", address != null ? address : "", port, contextPath);
         log.info("server startup in {} ms", System.currentTimeMillis() - start);
         tomcat.getServer().await();

@@ -7,7 +7,7 @@ A simple & security file upload/download service, depend on [file-repository 2.0
 ## Build 
 
 ```shell
-  mvn clean package -U -am -pl boot -Dmaven.test.skip=true
+  mvn clean package -U -am -pl boot -DskitTests
 ```
 
 You can get a fat jar named 'filepod-standalone.jar in boot/target'

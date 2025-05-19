@@ -3,3 +3,4 @@ org.coodex.security.access.TotpBasedAccessController
 org.coodex.security.access.ConcreteAccessController
 org.coodex.security.access.ConcreteV040AccessController
 org.coodex.security.access.SessionBasedAccessController
+org.coodex.security.access.AllowableAccessController
