@@ -19,6 +19,10 @@ public class FilepodMetaInf extends FileMetaInf {
      * alias of fileName
      */
     private String name;
+    /**
+     * file size (for old json)
+     */
+    private long size;
 
     public String getContentType() {
         return contentType;
@@ -54,5 +58,13 @@ public class FilepodMetaInf extends FileMetaInf {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
     }
 }

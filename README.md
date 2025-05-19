@@ -7,7 +7,7 @@ A simple & security file upload/download service, depend on [file-repository 2.0
 ## Build 
 
 ```shell
-  mvn clean package -U -am -pl boot -Dmaven.test.skip=true
+  mvn clean package -U -am -pl boot -DskitTests
 ```
 
 You can get a fat jar named 'filepod-standalone.jar in boot/target'
@@ -177,3 +177,71 @@ or
   docker-compose up -d
   docker-compose down
 ```
+
+## Install filepod as a linux system service
+
+- Execute "systemctl --version", need 232 or newer
+- Create new group
+
+```shell
+  groupadd -r filepod
+  # or
+  groupadd --system filepod
+```
+
+- Create new user
+
+```shell
+  useradd -r -m -g filepod -d /var/lib/filepod -s /usr/sbin/nologin -c "filepod server" filepod
+  # or
+  useradd --system --create-home --gid filepod --home-dir /var/lib/filepod --shell /usr/sbin/nologin --comment "filepod server" filepod
+```
+
+- Move filepod jar into your path, for example
+
+```shell
+  mv filepod-standalone.jar /var/lib/filepod/filepod.jar
+```
+
+- Put your config files into directory /etc/filepod
+- Create service file: /etc/systemd/system/filepod.service
+
+```properties
+  [Unit]
+  Description=filepod
+  After=network.target network-online.target
+  Requires=network-online.target
+  [Service]
+  Type=simple
+  Group=filepod
+  User=filepod
+  ExecStart=java -jar /var/lib/filepod/filepod.jar -c /etc/filepod
+  ExecReload=/bin/kill -s HUP $MAINPID
+  ExecStop=/bin/kill -s QUIT $MAINPID
+  [Install]
+  WantedBy=multi-user.target
+```
+
+- Create environment variables file for logback: /etc/systemd/system/filepod.service.d/logback.conf (file name must ends in ".conf")
+
+```properties
+  [Service]
+  Environment="LogbackConfigFile=logback-file.xml"
+  Environment="LOG_HOME=/var/log/filepod"
+```
+
+- Reload & enable filepod service
+
+```shell
+  sudo systemctl daemon-reload
+  sudo systemctl enable --now filepod
+```
+
+- Verify that it is running
+
+```shell
+  systemctl status filepod
+```
+
+- Now filepod is ready to service you
+- Notice: the owner of "filepod.jar" and log directory (/var/log/filepod) is filepod, the privilege of configuration files are 755

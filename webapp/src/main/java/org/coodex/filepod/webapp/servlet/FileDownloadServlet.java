@@ -67,9 +67,11 @@ public class FileDownloadServlet extends HttpServlet {
                         throw new FilepodServletException(HttpServletResponse.SC_NOT_FOUND,
                                 "file not found " + fileId);
                     }
-                    metaInf.setFileId(fileId);
                     // in scope
                     if (accessController.inScope(context.getClientId(), metaInf.getClientId())) {
+                        // fill meta info
+                        metaInf.setFileId(fileId);
+                        metaInf.setFileSize(Math.max(metaInf.getFileSize(), metaInf.getSize()));
                         metaInfs.add(metaInf);
                     } else {
                         throw new FilepodServletException(HttpServletResponse.SC_FORBIDDEN,

@@ -21,7 +21,10 @@ public class TotpBasedAccessController extends ScopeAccessController {
     private GoogleAuthenticator googleAuthenticator;
 
     public TotpBasedAccessController() {
+        // TODO window size
         googleAuthenticatorConfig = new GoogleAuthenticatorConfig();
+//        googleAuthenticatorConfig = new GoogleAuthenticatorConfig.GoogleAuthenticatorConfigBuilder().setWindowSize(7)
+//            .build();
         googleAuthenticator = new GoogleAuthenticator(googleAuthenticatorConfig);
     }
 
