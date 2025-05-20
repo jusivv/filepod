@@ -132,6 +132,10 @@ public class FileDownloadServlet extends HttpServlet {
                         long offset = 0;
                         long length = 0;
                         if (supportRange) {
+                            if (!(metaInf.getFileSize() > 0)) {
+                                throw new FilepodServletException(HttpServletResponse.SC_BAD_REQUEST,
+                                    "do not support range option, file meta info error.");
+                            }
                             response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
                             String pattern = "bytes\\s*=\\s*(\\d+)\\s*-\\s*(\\d+).*";
                             Pattern r = Pattern.compile(pattern);
@@ -149,7 +153,9 @@ public class FileDownloadServlet extends HttpServlet {
                                         "Illegal range value in header");
                             }
                         } else {
-                            response.setHeader("Content-Length", Long.toString(metaInf.getFileSize()));
+                            if (metaInf.getFileSize() > 0) {
+                                response.setHeader("Content-Length", Long.toString(metaInf.getFileSize()));
+                            }
                         }
                         // crypto
                         OutputStream os = outputStream;
