@@ -37,6 +37,12 @@ public class FileDownloadServlet extends HttpServlet {
 
     private Base64 base64 = new Base64();
 
+    private static final String[] KNOWN_EXT_NAMES = new String[] {
+        "jpg", "jpeg", "png", "gif", "bmp", "pdf", "txt", "doc", "docx",
+        "xls", "xlsx", "ppt", "pptx", "mp3", "mp4", "avi", "mkv", "flv", "wmv",
+        "mov", "wav", "aac"
+    };
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         AsyncContext asyncContext = req.startAsync();
@@ -211,6 +217,28 @@ public class FileDownloadServlet extends HttpServlet {
     }
 
     private String getFileName(FilepodMetaInf metaInf) {
-        return !StringUtils.isEmpty(metaInf.getFileName()) ? metaInf.getFileName() : metaInf.getName();
+        String fileName = !StringUtils.isEmpty(metaInf.getFileName()) ? metaInf.getFileName() : metaInf.getName();
+        // improve compatibility for legacy json content
+        if (StringUtils.isNotBlank(metaInf.getExtName())) {
+            String extName = metaInf.getExtName().trim();
+            if (fileName.endsWith(extName)) {
+                return fileName;
+            } else {
+                return fileName + "." + extName;
+            }
+        }
+        if (!fileName.contains(".")) {
+            fileName += findExtName(fileName);
+        }
+        return fileName;
+    }
+
+    private String findExtName(String fileName) {
+        for (String extName : KNOWN_EXT_NAMES) {
+            if (fileName.endsWith("_" + extName)) {
+                return "." + extName;
+            }
+        }
+        return "";
     }
 }
