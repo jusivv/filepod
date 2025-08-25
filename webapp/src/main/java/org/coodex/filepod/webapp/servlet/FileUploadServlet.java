@@ -58,6 +58,7 @@ public class FileUploadServlet extends HttpServlet {
                 IFileRepository fileRepository = FileRepoManager.getRepo(repo).orElseThrow(
                         () -> new RuntimeException("no file repository for " + repo));
                 ServletFileUpload uploadHandler = new ServletFileUpload(new DiskFileItemFactory());
+                uploadHandler.setHeaderEncoding("UTF-8");
                 List<FileItem> items = uploadHandler.parseRequest(request);
                 List<FilepodMetaInf> metaInfos = new ArrayList<>();
                 for (FileItem item : items) {
