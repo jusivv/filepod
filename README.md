@@ -80,7 +80,9 @@ Default implements of access controller & stream wrapper (for encryption)
 
 Startup service with main class org.coodex.filepod.boot.Launcher.
 
-## Upload
+## Web API
+
+### Upload
 
 - upload by form
 - upload url: http(s)://\<fileserver\>/attachments/upload/byform/{clientId}/{token}/{encrypt}
@@ -102,7 +104,7 @@ Startup service with main class org.coodex.filepod.boot.Launcher.
   }]
 ```
 
-## Download
+### Download
 
 - download url: http(s)://\<fileserver\>/attachments/download/{fileId};c={clientId};t={token}
 - clientId: file-client id
@@ -111,7 +113,7 @@ Startup service with main class org.coodex.filepod.boot.Launcher.
 - you can join fileId with "," to download multi-files, files will be packed in a zip file
 - Support "RANGE" header (only single file & single range)
 
-## Delete
+### Delete
 
 - delete url: http(s)://\<fileserver\>/attachments/delete/{clientId}/{token}/{fileId,fileId,...}
 - clientId: file-client id who has permission to delete files ("<clientId>.deletable" option in client.yml is true)
@@ -131,6 +133,29 @@ Startup service with main class org.coodex.filepod.boot.Launcher.
     "cipherModel": "aes.v2"
   }]
 ```
+
+### Get meta-info
+
+- get meta-info url: http(s)://\<fileserver\>/attachments/metaInfo/{clientId}/{token}/{fileId}
+- clientId: file-client id who has permission to get file meta-info
+- token: file access token (session token or one time password)
+- fileId: file id which meta-info you want to fetch
+- response status is 200 when success to get meta-info, response content:
+
+```json
+  {
+    "cipherModel": "aes.v2",
+    "clientId": "test",
+    "contentType": "image/jpeg",
+    "extName": "jpg",
+    "fileName":"image.jpg",
+    "fileSize": 80384,
+    "name": "image.jpg",
+    "size": 0
+  }
+```
+
+- name & size in response json are kept for legacy files
 
 ## Access controller
 

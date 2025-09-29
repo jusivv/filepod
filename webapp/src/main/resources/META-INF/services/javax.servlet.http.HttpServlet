@@ -2,3 +2,4 @@ org.coodex.filepod.webapp.servlet.FileRepoLoader
 org.coodex.filepod.webapp.servlet.FileDownloadServlet
 org.coodex.filepod.webapp.servlet.FileUploadServlet
 org.coodex.filepod.webapp.servlet.FileDeleteServlet
+org.coodex.filepod.webapp.servlet.FileMetaInfServlet
