@@ -23,6 +23,10 @@ public class FilepodMetaInf extends FileMetaInf {
      * file size (for old json)
      */
     private long size;
+    /**
+     * file name (for old json)
+     */
+    private String originName;
 
     public String getContentType() {
         return contentType;
@@ -66,5 +70,13 @@ public class FilepodMetaInf extends FileMetaInf {
 
     public void setSize(long size) {
         this.size = size;
+    }
+
+    public String getOriginName() {
+        return originName;
+    }
+
+    public void setOriginName(String originName) {
+        this.originName = originName;
     }
 }

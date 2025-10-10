@@ -26,6 +26,8 @@ List client(s) who use filepod.
     defaultCipher: <aes.v2|aes.v1> # default cipher for stored file aes.v2 (recommended): CTR; aes.v1: CFB
     serverKey: <keyInBase64>
     totpSecret: <secretInBase64> # only for accessController=totp
+    allowList: <file extension name split with comma> # for example "jpg,doc,pdf", high priority than blockList
+    blockList: <file extension name split with comma> # for example "jsp,php,jar,war,sh,bat"
 ```
 
 ### file-repository-<local|alioss>.yml
