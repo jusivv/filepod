@@ -6,6 +6,8 @@ testTotp:
   fileRepository: "local"
   defaultCipher: "aes.v2"
   serverKey: ${LOCAL_SERVER_KEY:MDEyMzQ1Njc4OUFCQ0RFRg==}
+  blockList: "jsp,php,js,sh,bat,sql,html"
+  allowList: "txt,jpg,pdf"
 
 testConcrete:
   scope: "*"

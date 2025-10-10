@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -54,6 +55,11 @@ public class FileUploadServlet extends HttpServlet {
                 //// repo name
                 String repo = ClientSettings.getString(context.getClientId() + ".fileRepository",
                         "local");
+                // block list & allow list
+                String blockList = ClientSettings.getString(context.getClientId() + ".blockList",
+                    "");
+                String allowList = ClientSettings.getString(context.getClientId() + ".allowList",
+                    "");
                 //// get repo
                 IFileRepository fileRepository = FileRepoManager.getRepo(repo).orElseThrow(
                         () -> new RuntimeException("no file repository for " + repo));
@@ -63,10 +69,16 @@ public class FileUploadServlet extends HttpServlet {
                 List<FilepodMetaInf> metaInfos = new ArrayList<>();
                 for (FileItem item : items) {
                     if (!item.isFormField() && !StringUtils.isEmpty(item.getName())) {
+                        // check extName
+                        String extName = FilenameUtils.getExtension(item.getName());
+                        if (!allowUpload(extName, allowList, blockList)) {
+                            throw new FilepodServletException(HttpServletResponse.SC_FORBIDDEN,
+                                "reject to upload file: " + item.getName());
+                        }
                         // meta inf
                         FilepodMetaInf metaInf = new FilepodMetaInf();
                         metaInf.setFileName(item.getName());
-                        metaInf.setExtName(FilenameUtils.getExtension(item.getName()));
+                        metaInf.setExtName(extName);
                         metaInf.setContentType(item.getContentType());
                         metaInf.setFileSize(item.getSize());
                         metaInf.setClientId(context.getClientId());
@@ -118,5 +130,18 @@ public class FileUploadServlet extends HttpServlet {
             return true;
         });
         return context;
+    }
+
+    private boolean allowUpload(String extName, String allowList, String blockList) {
+        if (StringUtils.isEmpty(extName)) {
+            return true;
+        }
+        if (!StringUtils.isEmpty(allowList)) {
+            return Arrays.asList(allowList.split(",")).contains(extName);
+        } else if (!StringUtils.isEmpty(blockList)) {
+            return !Arrays.asList(blockList.split(",")).contains(extName);
+        } else {
+            return true;
+        }
     }
 }

@@ -217,7 +217,9 @@ public class FileDownloadServlet extends HttpServlet {
     }
 
     private String getFileName(FilepodMetaInf metaInf) {
-        String fileName = !StringUtils.isEmpty(metaInf.getFileName()) ? metaInf.getFileName() : metaInf.getName();
+        String fileName = !StringUtils.isEmpty(metaInf.getFileName()) ? metaInf.getFileName() :
+            !StringUtils.isEmpty(metaInf.getName()) ? metaInf.getName() : metaInf.getOriginName();
+
         // improve compatibility for legacy json content
         if (StringUtils.isNotBlank(metaInf.getExtName())) {
             String extName = metaInf.getExtName().trim();
