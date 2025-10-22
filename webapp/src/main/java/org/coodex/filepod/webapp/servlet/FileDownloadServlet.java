@@ -212,8 +212,12 @@ public class FileDownloadServlet extends HttpServlet {
 
     private String getContentDispType(FilepodMetaInf metaInf) {
         String contentType = metaInf.getContentType();
-        return contentType.startsWith("text") || contentType.startsWith("image") ? "inline"
+        if (contentType != null) {
+            return contentType.startsWith("text") || contentType.startsWith("image") ? "inline"
                 : "attachment";
+        } else {
+            return "attachment";
+        }
     }
 
     private String getFileName(FilepodMetaInf metaInf) {
